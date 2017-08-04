@@ -124,16 +124,16 @@ class AVLTree {
         if(target) {
             root.val = target.val;
             root.height = target.height;
-            this.siftDown(target);
-        } else if(root.parent) root.remove();
+            return this.siftDown(target);
+        } else return root;
     }
 
     remove(val) {
         const node = this.search(val);
         if(!node) return false;
         else {
-            this.siftDown(node);
-            return true;
+            const leaf = this.siftDown(node);
+            leaf.remove();
         }
     }
 

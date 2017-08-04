@@ -24,6 +24,13 @@ describe('AVLTree', () => {
         assert.equal(tree.root.height, 5);
     })
 
+    it('can siftdown a value', ()=> {
+        const tree = new AVLTree([1, 10, 15, 8, 40]);
+        tree.siftDown(tree.root);
+        assert.equal(tree.root.val, 15);
+        assert.equal(tree.root.right.val, 40);
+    })
+
     it('can remove a value', ()=> {
         const tree = new AVLTree([2, 1]);
         tree.remove(2);
@@ -43,15 +50,6 @@ describe('AVLTree', () => {
 
         assert.equal(tree1.compareAgainst(tree2), true);
         assert.equal(tree1.compareAgainst(tree3), false);
-    })
-
-    it('can siftdown and remove a node', ()=> {
-        const tree = new AVLTree([1, 10, 15, 8, 40]);
-        assert.equal(tree.root.rightHeight, 2);
-        tree.siftDown(tree.root);
-        assert.equal(tree.root.val, 15);
-        assert.equal(tree.root.right.val, 40);
-        assert.equal(tree.root.rightHeight, 1);
     })
 
     it('can auto perform a Right Left and a Right Right rotation', ()=> {
