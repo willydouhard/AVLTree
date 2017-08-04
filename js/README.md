@@ -22,6 +22,6 @@ tree.compareAgainst(tree2) //output false
 ```
 Test
 -------
-`npm install -g mocha`
-`cd AVLTree/js`
-`npm test`
+`npm install -g mocha`  
+`cd AVLTree/js`  
+`npm test`  
