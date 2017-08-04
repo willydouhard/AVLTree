@@ -130,6 +130,7 @@ class AVLTree {
 
     remove(val) {
         const node = this.search(val);
+        if(!this.root.height && node === this.root) return this.root = null;
         if(!node) return false;
         else {
             const leaf = this.siftDown(node);

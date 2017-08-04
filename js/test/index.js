@@ -35,6 +35,8 @@ describe('AVLTree', () => {
         const tree = new AVLTree([2, 1]);
         tree.remove(2);
         assert.equal(tree.root.height, 0);
+        tree.remove(1);
+        assert.equal(tree.root, null);
     })
 
     it('can search for a value', ()=> {
