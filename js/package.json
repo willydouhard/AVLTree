@@ -12,6 +12,10 @@
   "keywords": [
     "AVLTree"
   ],
+  "repository" :
+  { "type" : "git",
+    "url" : "https://github.com/willydouhard/AVLTree"
+  },
   "author": "Willy Douhard",
   "license": "ISC",
   "devDependencies": {}

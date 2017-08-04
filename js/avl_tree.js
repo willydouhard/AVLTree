@@ -63,14 +63,16 @@ class Node {
     }
 
     remove() {
-        this.decrementParentsHeight(this.parent);
+        this.decrementParentsHeight();
         const filiation = this.filiation;
         if(filiation) this.parent[filiation] = null;
     }
 
-    decrementParentsHeight(root) {
-        if(root) root.height = Math.max(0, root.height - 1);
-        if(root.parent) this.decrementParentsHeight(root.parent);
+    decrementParentsHeight() {
+        if(this.parent) {
+            this.parent.height = Math.max(0, this.parent.height - 1);
+            if(this.parent.parent) this.parent.decrementParentsHeight();
+        }
     }
 
     isBalanced() {
@@ -83,14 +85,19 @@ class AVLTree {
     constructor(arr) {
         this.root = null;
 
-        for(let entry of arr) {
-            this.insert(entry);
+        if(arr instanceof Array) {
+            for(let entry of arr) {
+                this.insert(entry);
+            }
         }
     }
 
     insert(val, root) {
         if(!this.root) return this.root = new Node(null, val);
         root = (root) ? root : this.root;
+
+        if(root.val === val) return root.decrementParentsHeight();
+
         root.height += 1;
         const target = (val < root.val) ? 'left' : 'right';
         if(root[target]) {

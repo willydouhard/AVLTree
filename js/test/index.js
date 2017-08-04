@@ -5,15 +5,23 @@ const AVLTree = require('../avl_tree');
 
 describe('AVLTree', () => {
 
+    it('can insert a value', ()=> {
+        const tree = new AVLTree();
+        tree.insert(2);
+        tree.insert(4);
+        assert.equal(tree.root.height, 1);
+    })
+
     it('can create a tree from an array', ()=> {
         const tree = new AVLTree([1,2,5,6]);
         assert.equal(tree.root.height, 3);
     })
 
-    it('can insert a value', ()=> {
-        const tree = new AVLTree([1]);
-        tree.insert(2);
-        assert.equal(tree.root.height, 1);
+    it('cannot contain the same value twice', ()=> {
+        const tree = new AVLTree([2, 10, 5, 20, 6, 18]);
+        assert.equal(tree.root.height, 5);
+        tree.insert(18);
+        assert.equal(tree.root.height, 5);
     })
 
     it('can remove a value', ()=> {
