@@ -66,4 +66,10 @@ describe('AVLTree', () => {
         assert.equal(tree.root.right.val, 10);
     })
 
+    it('preserves balance on remove', ()=> {
+        const tree = new AVLTree([3, 4, 5, 10]);
+        tree.remove(3);
+        assert.equal(tree.root.val, 5);
+    })
+
 })

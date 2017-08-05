@@ -134,8 +134,10 @@ class AVLTree {
         const target = (val < root.val) ? 'left' : 'right';
         if(root[target]) {
             const res = this.insert(val, root[target]);
-            root.computeHeight();
-            if(!root.isBalanced()) root.balance();
+            if(res) {
+                root.computeHeight();
+                if(!root.isBalanced()) root.balance();
+            }
             return res;
         }
         else {
