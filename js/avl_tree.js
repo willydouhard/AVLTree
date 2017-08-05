@@ -10,11 +10,11 @@ class Node {
     }
 
     get leftHeight() {
-        return (this.left) ? this.left.height + 1 : - 1;
+        return (this.left) ? this.left.height : - 1;
     }
 
     get rightHeight() {
-        return (this.right) ? this.right.height + 1 : - 1;
+        return (this.right) ? this.right.height : - 1;
     }
 
     get filiation() {
@@ -25,7 +25,35 @@ class Node {
     }
 
     computeHeight() {
-        this.height = Math.max(0, this.rightHeight) + Math.max(0, this.leftHeight);
+        this.height = Math.max(this.leftHeight, this.rightHeight) + 1;
+    }
+
+    bottomUp(...fns) {
+        for(let fn of fns) {
+            fn.apply(this);
+        }
+        if(this.parent) {
+            this.parent.bottomUp(fn);
+        }
+    }
+
+    siftDown() {
+        let target;
+        if(this.right) target = this.right;
+        else if(this.left) target = this.left;
+        if(target) {
+            [this.val, target.val] = [target.val, this.val];
+            return target.siftDown();
+        } else return this;
+    }
+
+    remove() {
+        const filiation = this.filiation;
+        if(filiation) {
+            const parent = this.parent;
+            parent[filiation] = null;
+            parent.bottomUp(this.computeHeight, this.balance);
+        }
     }
 
     rotateLL() {
@@ -62,16 +90,19 @@ class Node {
         root.computeHeight();
     }
 
-    remove() {
-        this.decrementParentsHeight();
-        const filiation = this.filiation;
-        if(filiation) this.parent[filiation] = null;
-    }
-
-    decrementParentsHeight() {
-        if(this.parent) {
-            this.parent.height = Math.max(0, this.parent.height - 1);
-            if(this.parent.parent) this.parent.decrementParentsHeight();
+    balance() {
+        if(this.leftHeight > this.rightHeight) {
+            if(this.left.rightHeight > this.left.leftHeight) {
+                // LR
+                this.left.right.rotateRR();
+            }
+            this.left.rotateLL();
+        } else if(this.rightHeight > this.leftHeight) {
+            if(this.right.leftHeight > this.right.rightHeight) {
+                // RL
+                this.right.left.rotateLL();
+            }
+            this.right.rotateRR();
         }
     }
 
@@ -93,18 +124,25 @@ class AVLTree {
     }
 
     insert(val, root) {
-        if(!this.root) return this.root = new Node(null, val);
+        if(!this.root) {
+            this.root = new Node(null, val);
+            return this.root;
+        }
         root = (root) ? root : this.root;
+        if(root.val === val) return false;
 
-        if(root.val === val) return root.decrementParentsHeight();
-
-        root.height += 1;
         const target = (val < root.val) ? 'left' : 'right';
         if(root[target]) {
-            this.insert(val, root[target]);
-            if(!root.isBalanced()) this.balance(root);
+            const res = this.insert(val, root[target]);
+            root.computeHeight();
+            if(!root.isBalanced()) root.balance();
+            return res;
         }
-        else root[target] = new Node(root, val);
+        else {
+            root[target] = new Node(root, val);
+            root.computeHeight();
+            return root[target];
+        }
     }
 
     search(val, root) {
@@ -116,41 +154,13 @@ class AVLTree {
                (val > root.val && root.right) ? this.search(val, root.right) : false;
     }
 
-    siftDown(root) {
-        let target;
-        if(root.right) target = root.right;
-        else if(root.left) target = root.left;
-
-        if(target) {
-            root.val = target.val;
-            root.height = target.height;
-            return this.siftDown(target);
-        } else return root;
-    }
-
     remove(val) {
         const node = this.search(val);
         if(!this.root.height && node === this.root) return this.root = null;
         if(!node) return false;
         else {
-            const leaf = this.siftDown(node);
+            const leaf = node.siftDown();
             leaf.remove();
-        }
-    }
-
-    balance(root) {
-        if(root.leftHeight > root.rightHeight) {
-            if(root.left.rightHeight > root.left.leftHeight) {
-                // LR
-                root.left.right.rotateRR();
-            }
-            root.left.rotateLL();
-        } else if(root.rightHeight > root.leftHeight) {
-            if(root.right.leftHeight > root.right.rightHeight) {
-                // RL
-                root.right.left.rotateLL();
-            }
-            root.right.rotateRR();
         }
     }
 

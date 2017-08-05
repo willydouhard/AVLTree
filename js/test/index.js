@@ -14,19 +14,17 @@ describe('AVLTree', () => {
 
     it('can create a tree from an array', ()=> {
         const tree = new AVLTree([1,2,5,6]);
-        assert.equal(tree.root.height, 3);
+        assert.equal(tree.root.height, 2);
     })
 
     it('cannot contain the same value twice', ()=> {
         const tree = new AVLTree([2, 10, 5, 20, 6, 18]);
-        assert.equal(tree.root.height, 5);
-        tree.insert(18);
-        assert.equal(tree.root.height, 5);
+        assert.equal(tree.insert(18), false);
     })
 
     it('can siftdown a value', ()=> {
         const tree = new AVLTree([1, 10, 15, 8, 40]);
-        tree.siftDown(tree.root);
+        tree.root.siftDown();
         assert.equal(tree.root.val, 15);
         assert.equal(tree.root.right.val, 40);
     })
@@ -59,7 +57,6 @@ describe('AVLTree', () => {
         assert.equal(tree.root.left.val, 1);
         assert.equal(tree.root.val, 9);
         assert.equal(tree.root.right.val, 10);
-        assert.equal(tree.root.height, 2);
     })
 
     it('can auto perform a Left Right and a Left Left rotation', ()=> {
@@ -67,7 +64,6 @@ describe('AVLTree', () => {
         assert.equal(tree.root.left.val, 4);
         assert.equal(tree.root.val, 6);
         assert.equal(tree.root.right.val, 10);
-        assert.equal(tree.root.height, 2);
     })
 
 })
