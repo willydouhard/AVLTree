@@ -32,9 +32,7 @@ class Node {
         for(let fn of fns) {
             fn.apply(this);
         }
-        if(this.parent) {
-            this.parent.bottomUp(fns);
-        }
+        if(this.parent) this.parent.bottomUp(...fns);
     }
 
     siftDown() {
@@ -116,12 +114,7 @@ class Node {
 class AVLTree {
     constructor(arr) {
         this.root = null;
-
-        if(arr instanceof Array) {
-            for(let entry of arr) {
-                this.insert(entry);
-            }
-        }
+        if(arr instanceof Array) this.bulkInsert(arr);
     }
 
     insert(val, root) {
@@ -145,6 +138,12 @@ class AVLTree {
             root[target] = new Node(root, val);
             root.computeHeight();
             return root[target];
+        }
+    }
+
+    bulkInsert(arr) {
+        for(let i = 0; i < arr.length; i++) {
+            this.insert(arr[i], this.root);
         }
     }
 
