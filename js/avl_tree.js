@@ -33,7 +33,7 @@ class Node {
             fn.apply(this);
         }
         if(this.parent) {
-            this.parent.bottomUp(fn);
+            this.parent.bottomUp(fns);
         }
     }
 
@@ -91,6 +91,7 @@ class Node {
     }
 
     balance() {
+        if(this.isBalanced()) return true;
         if(this.leftHeight > this.rightHeight) {
             if(this.left.rightHeight > this.left.leftHeight) {
                 // LR
@@ -136,7 +137,7 @@ class AVLTree {
             const res = this.insert(val, root[target]);
             if(res) {
                 root.computeHeight();
-                if(!root.isBalanced()) root.balance();
+                root.balance();
             }
             return res;
         }
